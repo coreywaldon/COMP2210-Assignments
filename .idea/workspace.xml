@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7bd64d8a-90a8-43a9-8563-3a8a67df626a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/A1/HandoutExamples.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/A1/Selector.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/A2/WarEagle.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/A2/HandoutExamples.java" afterPath="$PROJECT_DIR$/src/A2/HandoutExamples2.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/A2/Selector.java" afterPath="$PROJECT_DIR$/src/A2/Selector2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/A3/Extractor.java" afterPath="$PROJECT_DIR$/src/A3/Extractor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/A3/ExtractorClient.java" afterPath="$PROJECT_DIR$/src/A3/ExtractorClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/A3/Line.java" afterPath="$PROJECT_DIR$/src/A3/Line.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/A3/Point.java" afterPath="$PROJECT_DIR$/src/A3/Point.java" />
-    </list>
+    <list default="true" id="7bd64d8a-90a8-43a9-8563-3a8a67df626a" name="Default" comment="" />
     <ignored path="COMP2210.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -753,12 +739,12 @@
       <workItem from="1486851321899" duration="12000" />
       <workItem from="1486851343203" duration="18093000" />
       <workItem from="1486940018650" duration="10725000" />
-      <workItem from="1487013285992" duration="223000" />
+      <workItem from="1487013285992" duration="243000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29488000" />
+    <option name="totallyTimeSpent" value="29508000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="30" width="1920" height="992" extended-state="6" />
