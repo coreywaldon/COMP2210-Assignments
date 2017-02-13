@@ -1,3 +1,5 @@
+package A2;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -10,7 +12,7 @@ import java.util.List;
  * @author     Dean Hendrix (dh@auburn.edu)
  * @version    2017-01-30
  */
-public class HandoutExamples {
+public class HandoutExamples2 {
 
    /** Collections used in the various examples. */
    static Collection<Integer> c1 = Arrays.<Integer>asList(new Integer[]{2,8,7,3,4});
@@ -151,11 +153,11 @@ public class HandoutExamples {
     * Generates examples for the floor method.
     */
    public static void floorExamples() {
-      System.out.println(Selector.<Integer>floor(c1, 6, ascendingInteger));
-      System.out.println(Selector.<Integer>floor(c2, 1, descendingInteger));
-      System.out.println(Selector.<Integer>floor(c3, 9, ascendingInteger));
-      System.out.println(Selector.<Data>floor(c4, new Data("F",0), ascendingStringData));
-      System.out.println(Selector.<Data>floor(c4, new Data("B",9), ascendingIntegerData));
+      System.out.println(Selector2.<Integer>floor(c1, 6, ascendingInteger));
+      System.out.println(Selector2.<Integer>floor(c2, 1, descendingInteger));
+      System.out.println(Selector2.<Integer>floor(c3, 9, ascendingInteger));
+      System.out.println(Selector2.<Data>floor(c4, new Data("F",0), ascendingStringData));
+      System.out.println(Selector2.<Data>floor(c4, new Data("B",9), ascendingIntegerData));
    }
 
 
@@ -163,11 +165,11 @@ public class HandoutExamples {
     * Generates examples for the ceiling method.
     */
    public static void ceilingExamples() {
-      System.out.println(Selector.<Integer>ceiling(c1, 1, ascendingInteger));
-      System.out.println(Selector.<Integer>ceiling(c2, 7, descendingInteger));
-      System.out.println(Selector.<Integer>ceiling(c3, 0, ascendingInteger));
-      System.out.println(Selector.<Data>ceiling(c4, new Data("B",9), ascendingStringData));
-      System.out.println(Selector.<Data>ceiling(c4, new Data("F",0), ascendingIntegerData));
+      System.out.println(Selector2.<Integer>ceiling(c1, 1, ascendingInteger));
+      System.out.println(Selector2.<Integer>ceiling(c2, 7, descendingInteger));
+      System.out.println(Selector2.<Integer>ceiling(c3, 0, ascendingInteger));
+      System.out.println(Selector2.<Data>ceiling(c4, new Data("B",9), ascendingStringData));
+      System.out.println(Selector2.<Data>ceiling(c4, new Data("F",0), ascendingIntegerData));
    }
 
 
@@ -175,13 +177,13 @@ public class HandoutExamples {
     * Generates examples for the range method.
     */
    public static void rangeExamples() {
-      System.out.println(asString(Selector.<Integer>range(c1, 1, 5, ascendingInteger)));
-      System.out.println(asString(Selector.<Integer>range(c2, 3, 5, ascendingInteger)));
-      System.out.println(asString(Selector.<Integer>range(c2, 5, 3, descendingInteger)));
-      System.out.println(asString(Selector.<Integer>range(c3, 4, 8, ascendingInteger)));
-      System.out.println(asString(Selector.<Data>range(c4, new Data("B",3),
+      System.out.println(asString(Selector2.<Integer>range(c1, 1, 5, ascendingInteger)));
+      System.out.println(asString(Selector2.<Integer>range(c2, 3, 5, ascendingInteger)));
+      System.out.println(asString(Selector2.<Integer>range(c2, 5, 3, descendingInteger)));
+      System.out.println(asString(Selector2.<Integer>range(c3, 4, 8, ascendingInteger)));
+      System.out.println(asString(Selector2.<Data>range(c4, new Data("B",3),
          new Data("C",5), ascendingStringData)));
-      System.out.println(asString(Selector.<Data>range(c4, new Data("F",4),
+      System.out.println(asString(Selector2.<Data>range(c4, new Data("F",4),
          new Data("G",7), ascendingIntegerData)));
    }
 
@@ -190,12 +192,12 @@ public class HandoutExamples {
     * Generates examples for the kmax method.
     */
    public static void kmaxExamples() {
-      System.out.println(Selector.<Integer>kmax(c1, 1, ascendingInteger));
-      System.out.println(Selector.<Integer>kmax(c2, 2, descendingInteger));
-      System.out.println(Selector.<Integer>kmax(c3, 3, ascendingInteger));
-      System.out.println(Selector.<Data>kmax(c4, 4, ascendingStringData));
-      System.out.println(Selector.<Data>kmax(c4, 2, ascendingIntegerData));
-      System.out.println(Selector.<Integer>kmax(c5, 2, ascendingInteger));
+      System.out.println(Selector2.<Integer>kmax(c1, 1, ascendingInteger));
+      System.out.println(Selector2.<Integer>kmax(c2, 2, descendingInteger));
+      System.out.println(Selector2.<Integer>kmax(c3, 3, ascendingInteger));
+      System.out.println(Selector2.<Data>kmax(c4, 4, ascendingStringData));
+      System.out.println(Selector2.<Data>kmax(c4, 2, ascendingIntegerData));
+      System.out.println(Selector2.<Integer>kmax(c5, 2, ascendingInteger));
    }
 
 
@@ -203,11 +205,11 @@ public class HandoutExamples {
     * Generates examples for the kmin method.
     */
    public static void kminExamples() {
-      System.out.println(Selector.<Integer>kmin(c1, 1, ascendingInteger));
-      System.out.println(Selector.<Integer>kmin(c2, 2, descendingInteger));
-      System.out.println(Selector.<Integer>kmin(c3, 3, ascendingInteger));
-      System.out.println(Selector.<Data>kmin(c4, 4, ascendingStringData));
-      System.out.println(Selector.<Data>kmin(c4, 2, ascendingIntegerData));
+      System.out.println(Selector2.<Integer>kmin(c1, 1, ascendingInteger));
+      System.out.println(Selector2.<Integer>kmin(c2, 2, descendingInteger));
+      System.out.println(Selector2.<Integer>kmin(c3, 3, ascendingInteger));
+      System.out.println(Selector2.<Data>kmin(c4, 4, ascendingStringData));
+      System.out.println(Selector2.<Data>kmin(c4, 2, ascendingIntegerData));
    }
 
 
@@ -215,11 +217,11 @@ public class HandoutExamples {
     * Generates examples for the max method.
     */
    public static void maxExamples() {
-      System.out.println(Selector.<Integer>max(c1, ascendingInteger));
-      System.out.println(Selector.<Integer>max(c2, descendingInteger));
-      System.out.println(Selector.<Integer>max(c3, ascendingInteger));
-      System.out.println(Selector.<Data>max(c4, ascendingStringData));
-      System.out.println(Selector.<Data>max(c4, ascendingIntegerData));
+      System.out.println(Selector2.<Integer>max(c1, ascendingInteger));
+      System.out.println(Selector2.<Integer>max(c2, descendingInteger));
+      System.out.println(Selector2.<Integer>max(c3, ascendingInteger));
+      System.out.println(Selector2.<Data>max(c4, ascendingStringData));
+      System.out.println(Selector2.<Data>max(c4, ascendingIntegerData));
    }
 
 
@@ -227,11 +229,11 @@ public class HandoutExamples {
     * Generates examples for the min method.
     */
    public static void minExamples() {
-      System.out.println(Selector.<Integer>min(c1, ascendingInteger));
-      System.out.println(Selector.<Integer>min(c2, descendingInteger));
-      System.out.println(Selector.<Integer>min(c3, ascendingInteger));
-      System.out.println(Selector.<Data>min(c4, ascendingStringData));
-      System.out.println(Selector.<Data>min(c4, ascendingIntegerData));
+      System.out.println(Selector2.<Integer>min(c1, ascendingInteger));
+      System.out.println(Selector2.<Integer>min(c2, descendingInteger));
+      System.out.println(Selector2.<Integer>min(c3, ascendingInteger));
+      System.out.println(Selector2.<Data>min(c4, ascendingStringData));
+      System.out.println(Selector2.<Data>min(c4, ascendingIntegerData));
    }
 
 }

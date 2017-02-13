@@ -1,3 +1,5 @@
+package A2;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -5,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public final class Selector {
-   private Selector() { }
+public final class Selector2 {
+   private Selector2() { }
 
    public static <T> T min(Collection<T> coll, Comparator<T> comp) {
       if (coll == null || comp == null) {
