@@ -14,45 +14,45 @@ public class ExtractorClient {
 
    /** Sample point data. */
    private static Point[] p = new Point[] {
-      // l1
-      new Point(1, 0),
-      new Point(1, 1),
-      new Point(1, 2),
-      new Point(1, 3),
-      new Point(1, 4),
-      // l2
-      new Point(3, 0),
-      new Point(3, 1),
-      new Point(3, 2),
-      new Point(3, 3),
-      new Point(3, 4),
-      // l3
-      new Point(30, 5),
-      new Point(31, 5),
-      new Point(32, 5),
-      new Point(33, 5),
-      new Point(34, 5),
-      // l4
-      new Point(30, 6),
-      new Point(31, 6),
-      new Point(32, 6),
-      new Point(33, 6),
-      new Point(34, 6),
-      // l5
-      new Point(15, 9),
-      new Point(16, 10),
-      new Point(17, 11),
-      new Point(18, 12),
-      new Point(19, 13),
-      // l6
-      new Point(19, 9),
-      new Point(18, 10),
-      //new Point(17, 11), appears in l5 above; don't want duplicate
-      new Point(16, 12),
-      new Point(15, 13),
+         // l1
+         new Point(1, 0),
+         new Point(1, 1),
+         new Point(1, 2),
+         new Point(1, 3),
+         new Point(1, 4),
+         // l2
+         new Point(3, 0),
+         new Point(3, 1),
+         new Point(3, 2),
+         new Point(3, 3),
+         new Point(3, 4),
+         // l3
+         new Point(30, 5),
+         new Point(31, 5),
+         new Point(32, 5),
+         new Point(33, 5),
+         new Point(34, 5),
+         // l4
+         new Point(30, 6),
+         new Point(31, 6),
+         new Point(32, 6),
+         new Point(33, 6),
+         new Point(34, 6),
+         // l5
+         new Point(15, 9),
+         new Point(16, 10),
+         new Point(17, 11),
+         new Point(18, 12),
+         new Point(19, 13),
+         // l6
+         new Point(19, 9),
+         new Point(18, 10),
+         //new Point(17, 11), appears in l5 above; don't want duplicate
+         new Point(16, 12),
+         new Point(15, 13),
    };
 
-   /** 
+   /**
     * Drives execution.
     */
    public static void main(String[] args) {
@@ -60,12 +60,12 @@ public class ExtractorClient {
       SortedSet<Line> bruteLines = cl.getLinesBrute();
       System.out.println("Brute: ");
       printLines(bruteLines);
-   
+
       SortedSet<Line> fastLines = cl.getLinesFast();
       System.out.println("Fast: ");
       printLines(fastLines);
    }
-   
+
    /**
     * Prints an enumeration of the given set of lines.
     */
@@ -109,6 +109,7 @@ Fast:
 3: (30, 5) -> (31, 5) -> (32, 5) -> (33, 5) -> (34, 5)
 4: (30, 6) -> (31, 6) -> (32, 6) -> (33, 6) -> (34, 6)
 5: (15, 9) -> (16, 10) -> (17, 11) -> (18, 12) -> (19, 13)
+6: (19, 9) -> (18, 10) -> (17, 11) -> (16, 12) -> (15, 13)
 
 
  */

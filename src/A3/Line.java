@@ -11,10 +11,10 @@ import java.util.*;
  *
  */
 public class Line implements Comparable<Line>, Iterable<Point> {
- 
+
    SortedSet<Point> line;
-   
-   /** 
+
+   /**
     * Creates a new line containing no points.
     *
     * THIS METHOD IS PROVIDED FOR YOU AND MUST NOT BE CHANGED.
@@ -24,8 +24,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
    }
 
 
-   
-   /** 
+
+   /**
     * Creates a new line with containing all distinct collinear points in the
     * Collection c.
     */
@@ -35,8 +35,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
          add(p);
       }
    }
- 
-   /** 
+
+   /**
     * Adds the point p to this line if p is collinear with all points already
     * in the line and p itself is not already in the line. Returns true if this
     * line is changed as a result, false otherwise.
@@ -56,8 +56,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
 
       return line.add(p);
    }
-   
-   /** 
+
+   /**
     * Returns the first (minimum) point in this line or null if this line
     * contains no points.
     */
@@ -67,8 +67,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
       }
       return null;
    }
-   
-   /** 
+
+   /**
     * Returns the last (maximum) point in this line or null if this line
     * contains no points.
     */
@@ -78,8 +78,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
       }
       return null;
    }
-   
-   /** 
+
+   /**
     * Returns the number of points in this line.
     */
    public int length() {
@@ -98,6 +98,15 @@ public class Line implements Comparable<Line>, Iterable<Point> {
    public int compareTo(Line that) {
       int primary = this.first().compareTo(that.first());
       int secondary = this.last().compareTo(that.last());
+      if(that.equals(this)) {
+         return 0;
+      }
+      if (this.length() == 0) {
+         return -1;
+      }
+      if (that.length() == 0) {
+         return 1;
+      }
       if (primary == -1) {
          return -1;
       }
@@ -105,45 +114,50 @@ public class Line implements Comparable<Line>, Iterable<Point> {
          if (secondary == 0) {
             return 0;
          }
-         return -1;
+         if (secondary == -1) {
+            return -1;
+         }
       }
       return 1;
    }
+//   public int compareTo(Line that) {
+//      Iterator<Point> this_iter = iterator();
+//      Iterator<Point> that_iter = that.iterator();
+//      while (this_iter.hasNext() && that_iter.hasNext()) {
+//         int value = this_iter.next().compareTo(that_iter.next());
+//         if (value <= -1) {
+//            return -1;
+//         }
+//         if (value >= 1) {
+//            return 1;
+//         }
+//      }
+//      if (that.length() > this.length()) {
+//         return -1;
+//      }
+//      if (that.length() < this.length()) {
+//         return 1;
+//      }
+//      return 0;
+//   }
 
-   /** 
+   /**
     * Provide an iterator over all the points in this line. The order in which
     * points are returned must be ascending natural order.
     */
    @Override
    public Iterator<Point> iterator() {
-      return new Iterator<Point>() {
-         private int index = 0;
-         private Point[] points;
-
-         @Override
-         public boolean hasNext() {
-            return index < line.size();
-         }
-
-         @Override
-         public Point next() {
-            if (hasNext()) {
-               Point[] points = new Point[4];
-               line.toArray(points);
-               return points[index++];
-            }
-            return null;
-         }
-      };
+      return line.iterator();
    }
-   
-   /** 
-    * Return true if this point's x and y coordinates are the same as that
-    * point's x and y coordinates, and return false otherwise.
+
+   /**
+    * Return true if this line's first and last points are equal to the
+    * parameter's first and last points. Empty lines are equal to each other
+    * but are not equal to any non-empty line.
     *
     * THIS METHOD IS PROVIDED FOR YOU AND MUST NOT BE CHANGED.
     */
-   @Override 
+   @Override
    public boolean equals(Object obj) {
       if (obj == null) {
          return false;
@@ -155,10 +169,20 @@ public class Line implements Comparable<Line>, Iterable<Point> {
          return false;
       }
       Line that = (Line) obj;
+      if ((this.length() == 0) && (that.length() == 0)) {
+         return true;
+      }
+      if ((this.length() == 0) && (that.length() != 0)) {
+         return false;
+      }
+      if ((this.length() != 0) && (that.length() == 0)) {
+         return false;
+      }
       return (this.first().equals(that.first())) && (this.last().equals(that.last()));
    }
- 
-   /** 
+
+
+   /**
     * Return a string representation of this line.
     *
     * THIS METHOD IS PROVIDED FOR YOU AND MUST NOT BE CHANGED.
@@ -172,5 +196,5 @@ public class Line implements Comparable<Line>, Iterable<Point> {
       s = s.delete(s.length() - 4, s.length());
       return s.toString();
    }
- 
+
 }
