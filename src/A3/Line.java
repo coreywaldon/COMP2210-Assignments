@@ -1,5 +1,4 @@
 package A3;
-
 import java.util.*;
 
 /**
@@ -96,8 +95,9 @@ public class Line implements Comparable<Line>, Iterable<Point> {
     */
    @Override
    public int compareTo(Line that) {
-      int primary = this.first().compareTo(that.first());
-      int secondary = this.last().compareTo(that.last());
+      if(this.equals(that)) {
+         return 0;
+      }
       if(that.equals(this)) {
          return 0;
       }
@@ -107,6 +107,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
       if (that.length() == 0) {
          return 1;
       }
+      int primary = this.first().compareTo(that.first());
+      int secondary = this.last().compareTo(that.last());
       if (primary == -1) {
          return -1;
       }
@@ -120,26 +122,6 @@ public class Line implements Comparable<Line>, Iterable<Point> {
       }
       return 1;
    }
-//   public int compareTo(Line that) {
-//      Iterator<Point> this_iter = iterator();
-//      Iterator<Point> that_iter = that.iterator();
-//      while (this_iter.hasNext() && that_iter.hasNext()) {
-//         int value = this_iter.next().compareTo(that_iter.next());
-//         if (value <= -1) {
-//            return -1;
-//         }
-//         if (value >= 1) {
-//            return 1;
-//         }
-//      }
-//      if (that.length() > this.length()) {
-//         return -1;
-//      }
-//      if (that.length() < this.length()) {
-//         return 1;
-//      }
-//      return 0;
-//   }
 
    /**
     * Provide an iterator over all the points in this line. The order in which
@@ -151,9 +133,8 @@ public class Line implements Comparable<Line>, Iterable<Point> {
    }
 
    /**
-    * Return true if this line's first and last points are equal to the
-    * parameter's first and last points. Empty lines are equal to each other
-    * but are not equal to any non-empty line.
+    * Return true if this point's x and y coordinates are the same as that
+    * point's x and y coordinates, and return false otherwise.
     *
     * THIS METHOD IS PROVIDED FOR YOU AND MUST NOT BE CHANGED.
     */
@@ -180,7 +161,6 @@ public class Line implements Comparable<Line>, Iterable<Point> {
       }
       return (this.first().equals(that.first())) && (this.last().equals(that.last()));
    }
-
 
    /**
     * Return a string representation of this line.
