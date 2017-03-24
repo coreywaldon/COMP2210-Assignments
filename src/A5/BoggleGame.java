@@ -15,22 +15,12 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-/**
- * Created by caw0086 on 3/23/17.
- */
 public class BoggleGame implements WordSearchGame{
 
    private String[][] board;
    private Trie dictionary;
    private boolean loaded = false;
 
-   /**
-    * Loads the lexicon into a data structure for later use.
-    *
-    * @param fileName A string containing the name of the file to be opened.
-    * @throws IllegalArgumentException if fileName is null
-    * @throws IllegalArgumentException if fileName cannot be opened.
-    */
    @Override
    public void loadLexicon(String fileName) {
       if (fileName == null) {
@@ -53,18 +43,6 @@ public class BoggleGame implements WordSearchGame{
       loaded = true;
    }
 
-   /**
-    * Stores the incoming array of Strings in a data structure that will make
-    * it convenient to find words.
-    *
-    * @param letterArray This array of length N^2 stores the contents of the
-    *     game board in row-major order. Thus, index 0 stores the contents of board
-    *     position (0,0) and index length-1 stores the contents of board position
-    *     (N-1,N-1). Note that the board must be square and that the strings inside
-    *     may be longer than one character.
-    * @throws IllegalArgumentException if letterArray is null, or is  not
-    *     square.
-    */
    @Override
    public void setBoard(String[] letterArray) {
       if(letterArray == null){
@@ -84,11 +62,6 @@ public class BoggleGame implements WordSearchGame{
       }
    }
 
-   /**
-    * Creates a String representation of the board, suitable for printing to
-    *   standard out. Note that this method can always be called since
-    *   implementing classes should have a default board.
-    */
    @Override
    public String getBoard() {
       String output = "";
@@ -124,17 +97,6 @@ public class BoggleGame implements WordSearchGame{
       return output;
    }
 
-   /**
-    * Retrieves all valid words on the game board, according to the stated game
-    * rules.
-    *
-    * @param minimumWordLength The minimum allowed length (i.e., number of
-    *     characters) for any word found on the board.
-    * @return java.util.SortedSet which contains all the words of minimum length
-    *     found on the game board and in the lexicon.
-    * @throws IllegalArgumentException if minimumWordLength < 1
-    * @throws IllegalStateException if loadLexicon has not been called.
-    */
    @Override
    public SortedSet<String> getAllValidWords(int minimumWordLength) {
       if (minimumWordLength < 1) {
@@ -156,19 +118,6 @@ public class BoggleGame implements WordSearchGame{
       return allWords;
    }
 
-   /**
-    * Computes the cummulative score for the scorable words in the given set.
-    * To be scorable, a word must (1) have at least the minimum number of characters,
-    * (2) be in the lexicon, and (3) be on the board. Each scorable word is
-    * awarded one point for the minimum number of characters, and one point for
-    * each character beyond the minimum number.
-    *
-    * @param words The set of words that are to be scored.
-    * @param minimumWordLength The minimum number of characters required per word
-    * @return the cummulative score of all scorable words in the set
-    * @throws IllegalArgumentException if minimumWordLength < 1
-    * @throws IllegalStateException if loadLexicon has not been called.
-    */
    @Override
    public int getScoreForWords(SortedSet<String> words, int minimumWordLength) {
       if (minimumWordLength < 1) {
@@ -186,46 +135,16 @@ public class BoggleGame implements WordSearchGame{
       return total;
    }
 
-   /**
-    * Determines if the given word is in the lexicon.
-    *
-    * @param wordToCheck The word to validate
-    * @return true if wordToCheck appears in lexicon, false otherwise.
-    * @throws IllegalArgumentException if wordToCheck is null.
-    * @throws IllegalStateException if loadLexicon has not been called.
-    */
    @Override
    public boolean isValidWord(String wordToCheck) {
       return dictionary.contains(wordToCheck);
    }
 
-   /**
-    * Determines if there is at least one word in the lexicon with the
-    * given prefix.
-    *
-    * @param prefixToCheck The prefix to validate
-    * @return true if prefixToCheck appears in lexicon, false otherwise.
-    * @throws IllegalArgumentException if prefixToCheck is null.
-    * @throws IllegalStateException if loadLexicon has not been called.
-    */
    @Override
    public boolean isValidPrefix(String prefixToCheck) {
       return dictionary.containsPrefix(prefixToCheck);
    }
 
-   /**
-    * Determines if the given word is in on the game board. If so, it returns
-    * the path that makes up the word.
-    * @param wordToCheck The word to validate
-    * @return java.util.List containing java.lang.Integer objects with  the path
-    *     that makes up the word on the game board. If word is not on the game
-    *     board, return an empty list. Positions on the board are numbered from zero
-    *     top to bottom, left to right (i.e., in row-major order). Thus, on an NxN
-    *     board, the upper left position is numbered 0 and the lower right position
-    *     is numbered N^2 - 1.
-    * @throws IllegalArgumentException if wordToCheck is null.
-    * @throws IllegalStateException if loadLexicon has not been called.
-    */
    @Override
    public List<Integer> isOnBoard(String wordToCheck) {
       if (wordToCheck == null) {
@@ -235,16 +154,14 @@ public class BoggleGame implements WordSearchGame{
          throw new IllegalStateException();
       }
       Spider spider = new Spider(dictionary.getParentNode(wordToCheck), board, wordToCheck);
-      Vector<Stack<Tuple>> locations = spider.crawlAll(spider.getSource(), spider.getWeb(), "", new Stack<>());
+      spider.crawl(spider.getSource(), spider.getWeb(), "", new Stack<>());
+      Stack<Tuple> locations = spider.getResult();
       List<Integer> result = new ArrayList<>();
-      for (Stack<Tuple> stack : locations) {
-         for (Tuple location : stack) {
-            result.add(location.getX() * board.length + location.getY());
-         }
+      for (Tuple location : locations) {
+         result.add(location.getX() * board.length + location.getY());
       }
       return result;
    }
-
 
    private class Spider {
       private String goal;
@@ -255,7 +172,7 @@ public class BoggleGame implements WordSearchGame{
       private SortedSet<String> words;
       private Vector<Spider> brood;
       private Stack<Node<String>> web;
-      private Vector<Stack<Tuple>> results;
+      private Stack<Tuple> result;;
       
       private Spider(Node<String> parent, String[][] board, Vector<Tuple> locations, int index) {
          this.parent = parent;
@@ -270,22 +187,20 @@ public class BoggleGame implements WordSearchGame{
          words = new TreeSet<>();
          this.board = board;
          this.minimumLength = 0;
-         Vector<Tuple> locations = getLocations(parent);
-         if (locations.size() > 1) {
-            source = locations.get(0);
-            brood = new Vector<>();
-            for (int i = 0; i < locations.size(); i++) {
-               brood.add(new Spider(parent, board, locations, i));
-            }
-         } else if (locations.size() == 1) {
-            source = locations.get(0);
-         } else {
-            source = new Tuple(-1, -1);
-         }
-         web = new Stack<>();
-         web.add(parent);
          this.goal = goal;
-         results = new Vector<>();
+         result = new Stack<>();
+         this.web = new Stack<>();
+         this.web.add(parent);
+         Tuple firstLocation = new Tuple(-1, -1);
+         for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+               if (board[i][j].equals(parent.getValue())) {
+                  firstLocation = new Tuple(i, j);
+                  break;
+               }
+            }
+         }
+         this.source = firstLocation;
       }
 
       Spider(Node<String> parent, String[][] board, Tuple source, int minimumLength) {
@@ -305,10 +220,14 @@ public class BoggleGame implements WordSearchGame{
          }
          word += board[x][y];
          stack.push(new Tuple(x, y));
+         if (result != null && !result.isEmpty()) {
+            return stack;
+         }
          if (goal != null && word.equals(goal)) {
-            Stack<Tuple> result = new Stack<>();
+            if (result == null) {
+               result = new Stack<>();
+            }
             result.addAll(stack);
-            results.add(result);
          }
          addWord(nodeStack.peek(), word);
          for (int[] path : pathMatrix) {
@@ -330,23 +249,6 @@ public class BoggleGame implements WordSearchGame{
          return stack;
       }
 
-      Vector<Stack<Tuple>> crawlAll(Tuple position, Stack<Node<String>> nodeStack, String word, Stack<Tuple> stack){
-         Vector<Stack<Tuple>> foundPaths = new Vector<>();
-         crawl(position, nodeStack, word, stack);
-         if (results != null && results.size() != 0) {
-            foundPaths.addAll(results);
-         }
-         if (brood != null) {
-            for (Spider spider : brood) {
-               spider.crawl(position, nodeStack, word, stack);
-               if (spider.getResults() != null && spider.getResults().size() != 0){
-                  foundPaths.addAll(spider.getResults());
-               }
-            }
-         }
-         return foundPaths;
-      }
-
       boolean isValidMove(int x, int y, int maxX, int maxY) {
          boolean belowMax = x < maxX && y < maxY;
          boolean aboveMin = x >= 0 && y >= 0;
@@ -355,6 +257,13 @@ public class BoggleGame implements WordSearchGame{
 
       Node<String> getParent(){
          return parent;
+      }
+
+      private Stack<Node<String>> getWeb(){
+         if (web != null) {
+            return web;
+         }
+         throw new NoSuchElementException();
       }
 
       Tuple getSource(){
@@ -370,31 +279,9 @@ public class BoggleGame implements WordSearchGame{
       private SortedSet<String> getWords(){
          return words;
       }
-      
-      private Vector<Tuple> getLocations(Node<String> parent) {
-         Vector<Tuple> locations = new Vector<>();
-         if (parent == null) {
-            return locations;
-         }
-         for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-               if (board[i][j].equals(parent.getValue())){
-                  locations.add(new Tuple(i, j));
-               }
-            }
-         }
-         return locations;
-      }
 
-      private Stack<Node<String>> getWeb(){
-         if (web != null) {
-            return web;
-         }
-         throw new NoSuchElementException();
-      }
-
-      Vector<Stack<Tuple>> getResults() {
-         return results;
+      Stack<Tuple> getResult() {
+         return result;
       }
    }
 
@@ -455,7 +342,7 @@ public class BoggleGame implements WordSearchGame{
       boolean contains(String word) {
          word = word.toUpperCase();
          Node<String> parent = getParentNode(word);
-         return contains(parent, new ArrayList<String>(Arrays.asList(word.split(""))));
+         return contains(parent, new ArrayList<>(Arrays.asList(word.split(""))));
       }
       
       private boolean contains(Node<String> parent, ArrayList<String> remainingLetters) {
@@ -472,7 +359,7 @@ public class BoggleGame implements WordSearchGame{
       boolean add(String word) {
          word = word.toUpperCase();
          Node<String> parent = getParentNode(word);
-         return add(parent, new ArrayList<String>(Arrays.asList(word.split(""))));
+         return add(parent, new ArrayList<>(Arrays.asList(word.split(""))));
       }
 
       private boolean add(Node<String> parent, ArrayList<String> remainingLetters) {
@@ -546,7 +433,6 @@ public class BoggleGame implements WordSearchGame{
          Node<T> other = (Node<T>) object;
          return value == other.value && parent == other.parent;
       }
-
       public T getValue() {
          return value;
       }
