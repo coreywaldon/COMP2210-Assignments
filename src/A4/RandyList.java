@@ -42,16 +42,10 @@ public class RandyList<T> implements RandomizedList<T> {
                throw new NoSuchElementException();
             }
             if (!initialized) {
-               for (int i = 0; i < 10000; i++) {
-                  bag[i] = i;
-               }
                Random random = new Random();
-               for (int i = 0; i < 80000; i++) {
-                  int ind = random.nextInt(10000);
-                  int temp = bag[i];
-                  int temp2 = bag[ind];
-                  bag[i] = temp2;
-                  bag[ind] = temp;
+               Iterator<Integer> iterator = random.ints(0, list.length).distinct().iterator();
+               for (int i = 0; i < list.length; i++) {
+                  bag[i] = iterator.next();
                }
             }
             initialized = true;

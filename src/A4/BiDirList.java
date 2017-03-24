@@ -121,8 +121,9 @@ public class BiDirList<T> implements DoubleEndedList<T> {
          @Override
          public T next() {
             if (hasNext()) {
+               Node<T> returnVal = index;
                index = index.getRight();
-               return index.getValue();
+               return returnVal.getValue();
             }
             throw new NoSuchElementException();
          }
