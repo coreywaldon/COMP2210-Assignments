@@ -9,18 +9,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-public class BoggleGame implements WordSearchGame{
+public class BoggleGame implements WordSearchGame {
 
    private String[][] board;
    private Trie dictionary;
    private boolean loaded = false;
-
+   public int total = 0;
    @Override
    public void loadLexicon(String fileName) {
       if (fileName == null) {
@@ -31,13 +30,18 @@ public class BoggleGame implements WordSearchGame{
          File f = new File(path.getFile());
          BufferedReader reader = new BufferedReader(new FileReader(f));
          String input;
-         while((input = reader.readLine()) != null){
+         while ((input = reader.readLine()) != null) {
             if (dictionary == null) {
                dictionary = new Trie();
             }
-            dictionary.add(input.split(" ")[0]);
+            if(input.contains(" ")) {
+               input = input.substring(0, input.indexOf(" "));
+            }
+            input = input.replace(" ", "");
+            dictionary.add(input.toUpperCase());
+            total++;
          }
-      } catch (IOException e) {
+      } catch (Exception e) {
          throw new IllegalArgumentException();
       }
       loaded = true;
@@ -45,11 +49,11 @@ public class BoggleGame implements WordSearchGame{
 
    @Override
    public void setBoard(String[] letterArray) {
-      if(letterArray == null){
+      if (letterArray == null) {
          throw new IllegalArgumentException();
       }
       double n = Math.sqrt(letterArray.length);
-      if (n != Math.floor(n)){
+      if (n != Math.floor(n)) {
          throw new IllegalArgumentException();
       }
       int N = (int) Math.floor(n);
@@ -67,8 +71,8 @@ public class BoggleGame implements WordSearchGame{
       String output = "";
       int imax = board.length + 2;
       int jmax = board.length * 2 + 3;
-      for (int i = 0, k = -1; i < imax; i++) {
-         for (int j = 0, l = -1; j < jmax; j++) {
+      for (int i = 0, k = - 1; i < imax; i++) {
+         for (int j = 0, l = - 1; j < jmax; j++) {
             if (i == 0 || i == imax - 1) {
                if (j == 0 || j == jmax - 1) {
                   if (i > 0 && i != imax - 1) {
@@ -108,7 +112,7 @@ public class BoggleGame implements WordSearchGame{
       SortedSet<String> allWords = new TreeSet<>();
       for (int i = 0; i < board.length; i++) {
          for (int j = 0; j < board.length; j++) {
-            Spider spider = new Spider(dictionary.getParentNode(board[i][j]), board, new Tuple(i, j), minimumWordLength);
+            Spider spider = new Spider(dictionary.getNode(board[i][j]), board, new Tuple(i, j), minimumWordLength);
             Stack<Node<String>> nodeStack = new Stack<>();
             nodeStack.push(spider.getParent());
             spider.crawl(spider.getSource(), nodeStack, "", new Stack<>());
@@ -123,7 +127,7 @@ public class BoggleGame implements WordSearchGame{
       if (minimumWordLength < 1) {
          throw new IllegalArgumentException();
       }
-      if (!loaded) {
+      if (! loaded) {
          throw new IllegalStateException();
       }
       int total = 0;
@@ -150,16 +154,13 @@ public class BoggleGame implements WordSearchGame{
       if (wordToCheck == null) {
          throw new IllegalArgumentException();
       }
-      if (!loaded) {
+      if (! loaded) {
          throw new IllegalStateException();
       }
       Spider spider = new Spider(dictionary.getParentNode(wordToCheck), board, wordToCheck);
-      spider.crawl(spider.getSource(), spider.getWeb(), "", new Stack<>());
       Stack<Tuple> locations = spider.getResult();
       List<Integer> result = new ArrayList<>();
-      for (Tuple location : locations) {
-         result.add(location.getX() * board.length + location.getY());
-      }
+      locations.forEach(a -> result.add(a.getX() * board.length + a.getY()));
       return result;
    }
 
@@ -170,18 +171,9 @@ public class BoggleGame implements WordSearchGame{
       private final Tuple source;
       private final int minimumLength;
       private SortedSet<String> words;
-      private Vector<Spider> brood;
       private Stack<Node<String>> web;
-      private Stack<Tuple> result;;
-      
-      private Spider(Node<String> parent, String[][] board, Vector<Tuple> locations, int index) {
-         this.parent = parent;
-         words = new TreeSet<>();
-         this.board = board;
-         this.minimumLength = 0;
-         this.source = locations.get(index);        
-      }
-      
+      private Stack<Tuple> result;
+
       Spider(Node<String> parent, String[][] board, String goal) {
          this.parent = parent;
          words = new TreeSet<>();
@@ -191,14 +183,12 @@ public class BoggleGame implements WordSearchGame{
          result = new Stack<>();
          this.web = new Stack<>();
          this.web.add(parent);
-         Tuple firstLocation = new Tuple(-1, -1);
-         for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
-               if (board[i][j].equals(parent.getValue())) {
-                  firstLocation = new Tuple(i, j);
-                  break;
-               }
+         Tuple firstLocation = new Tuple(- 1, - 1);
+         for (Tuple location : getLocations(parent)) {
+            if (location != null) {
+               firstLocation = location;
             }
+            this.crawl(location, web, "", new Stack<>());
          }
          this.source = firstLocation;
       }
@@ -211,42 +201,57 @@ public class BoggleGame implements WordSearchGame{
          this.minimumLength = minimumLength;
       }
 
-      Stack<Tuple> crawl(Tuple position, Stack<Node<String>> nodeStack, String word, Stack<Tuple> stack) {
-         int[][] pathMatrix = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
+      void crawl(Tuple position, Stack<Node<String>> nodeStack, String word, Stack<Tuple> visited) {
+         int[][] pathMatrix = {{0, 1}, {0, - 1}, {1, 0}, {- 1, 0}, {1, 1}, {- 1, - 1}, {- 1, 1}, {1, - 1}};
          int x = position.getX();
          int y = position.getY();
          if (x < 0 || y < 0) {
             throw new IllegalArgumentException();
          }
          word += board[x][y];
-         stack.push(new Tuple(x, y));
-         if (result != null && !result.isEmpty()) {
-            return stack;
+         visited.push(new Tuple(x, y));
+         if (result != null && ! result.isEmpty()) {
+            return;
          }
          if (goal != null && word.equals(goal)) {
             if (result == null) {
                result = new Stack<>();
             }
-            result.addAll(stack);
+            result.addAll(visited);
          }
          addWord(nodeStack.peek(), word);
          for (int[] path : pathMatrix) {
-            while(stack.size() > word.length()){
-               stack.pop();
+            while (visited.size() > word.length()) {
+               visited.pop();
             }
-            while(nodeStack.size() > word.length()){
+            while (nodeStack.size() > word.length()) {
                nodeStack.pop();
             }
             int dx = path[0];
             int dy = path[1];
             if (isValidMove(dx + x, dy + y, board.length, board.length) &&
-                  nodeStack.peek().getChild(board[dx + x][dy + y]) != null &&
-                  !stack.contains(new Tuple(dx + x, dy + y))) {
-               nodeStack.push(nodeStack.peek().getChild(board[dx + x][dy + y]));
-               crawl(new Tuple(x + dx, y + dy), nodeStack, word, stack);
+                  dictionary.containsPrefix(word+board[dx+x][dy+y]) &&
+                  ! visited.contains(new Tuple(dx + x, dy + y))) {
+               Node<String> n = dictionary.getNode(word+board[dx+x][dy+y]);
+               nodeStack.push(n);
+               crawl(new Tuple(x + dx, y + dy), nodeStack, word, visited);
             }
          }
-         return stack;
+      }
+
+      private Vector<Tuple> getLocations(Node<String> parent) {
+         Vector<Tuple> locations = new Vector<>();
+         if (parent == null) {
+            return locations;
+         }
+         for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+               if (board[i][j].equals(parent.getValue())){
+                  locations.add(new Tuple(i, j));
+               }
+            }
+         }
+         return locations;
       }
 
       boolean isValidMove(int x, int y, int maxX, int maxY) {
@@ -255,28 +260,21 @@ public class BoggleGame implements WordSearchGame{
          return belowMax && aboveMin;
       }
 
-      Node<String> getParent(){
+      Node<String> getParent() {
          return parent;
       }
 
-      private Stack<Node<String>> getWeb(){
-         if (web != null) {
-            return web;
-         }
-         throw new NoSuchElementException();
-      }
-
-      Tuple getSource(){
+      Tuple getSource() {
          return source;
       }
 
-      private void addWord(Node<String> node, String word){
-         if (node.isEdge() && word.length() >= minimumLength) {
+      private void addWord(Node<String> node, String word) {
+         if (node != null && node.isEdge() && word.length() >= minimumLength) {
             words.add(word);
          }
       }
 
-      private SortedSet<String> getWords(){
+      private SortedSet<String> getWords() {
          return words;
       }
 
@@ -294,20 +292,17 @@ public class BoggleGame implements WordSearchGame{
          this.y = y;
       }
 
-      int getX(){
+      int getX() {
          return x;
       }
 
-      int getY(){
+      int getY() {
          return y;
       }
 
       @Override
       public boolean equals(Object other) {
-         if (other == null || !(other instanceof Tuple)) {
-            return false;
-         }
-         return (this.x == ((Tuple) other).getX() && this.y == ((Tuple) other).getY());
+         return ! (other == null || ! (other instanceof Tuple)) && (this.x == ((Tuple) other).getX() && this.y == ((Tuple) other).getY());
       }
    }
 
@@ -315,13 +310,13 @@ public class BoggleGame implements WordSearchGame{
       private Vector<Node<String>> network;
       private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-      public Trie(){
+      public Trie() {
          network = new Vector<>();
          for (String s : alphabet.split("")) {
             network.add(new Node<>(s));
          }
       }
-      
+
       boolean containsPrefix(String prefix) {
          prefix = prefix.toUpperCase();
          Node<String> parent = getParentNode(prefix);
@@ -333,10 +328,7 @@ public class BoggleGame implements WordSearchGame{
             return false;
          }
          remainingLetters.remove(0);
-         if (remainingLetters.size() == 0) {
-            return true;
-         }
-         return containsPrefix(parent.getChild(remainingLetters.get(0)), remainingLetters);
+         return remainingLetters.size() == 0 || containsPrefix(parent.getChild(remainingLetters.get(0)), remainingLetters);
       }
 
       boolean contains(String word) {
@@ -344,7 +336,7 @@ public class BoggleGame implements WordSearchGame{
          Node<String> parent = getParentNode(word);
          return contains(parent, new ArrayList<>(Arrays.asList(word.split(""))));
       }
-      
+
       private boolean contains(Node<String> parent, ArrayList<String> remainingLetters) {
          if (parent == null) {
             return false;
@@ -375,7 +367,23 @@ public class BoggleGame implements WordSearchGame{
          if (word == null) {
             throw new IllegalArgumentException();
          }
-         return network.get(alphabet.indexOf(word.charAt(0)+""));
+         return network.get(alphabet.indexOf(word.charAt(0) + ""));
+      }
+
+      Node<String> getNode(String word) {
+         if (word == null) {
+            throw new IllegalArgumentException();
+         }
+         Node<String> n = getParentNode(word);
+         word = word.substring(1, word.length());
+         while (word.length() > 0) {
+            if (n.getChild(word.charAt(0)+"") == null) {
+               return n;
+            }
+            n = n.getChild(word.charAt(0)+"");
+            word = word.substring(1, word.length());
+         }
+         return n;
       }
    }
 
@@ -398,26 +406,22 @@ public class BoggleGame implements WordSearchGame{
          isEdge = false;
       }
 
-      Node<T> addChild(T value){
+      Node<T> addChild(T value) {
          Node<T> child = new Node<>(value, this);
          children.putIfAbsent(value, child);
          return children.get(value);
-      }
-
-      HashMap<T, Node<T>> getChildren(){
-         return children;
       }
 
       Node<T> getChild(T value) {
          return children.get(value);
       }
 
-      Node<T> setAsEdge(){
+      Node<T> setAsEdge() {
          isEdge = true;
          return this;
       }
 
-      boolean isEdge(){
+      boolean isEdge() {
          return isEdge;
       }
 
@@ -427,12 +431,13 @@ public class BoggleGame implements WordSearchGame{
          if (object == null) {
             return false;
          }
-         if (!(object instanceof Node)){
+         if (! (object instanceof Node)) {
             return false;
          }
          Node<T> other = (Node<T>) object;
          return value == other.value && parent == other.parent;
       }
+
       public T getValue() {
          return value;
       }

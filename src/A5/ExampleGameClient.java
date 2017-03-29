@@ -1,5 +1,8 @@
 package A5;
 
+import java.util.Random;
+import java.util.SortedSet;
+
 /**
  * ExampleGameClient.java
  * A sample client for the assignment handout.
@@ -13,16 +16,24 @@ public class ExampleGameClient {
    /** Drives execution. */
    public static void main(String[] args) {
       WordSearchGame game = WordSearchGameFactory.createGame();
-      game.loadLexicon("wordfiles/words.txt");
-      game.setBoard(new String[]{"E", "E", "C", "A", "A", "L", "E", "P", "H", 
-                                 "N", "B", "O", "Q", "T", "T", "Y"});
+      game.loadLexicon("wordfiles/words_medium.txt");
+      String alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM";
+//      String[] board = new String[500*500];
+//      Random random = new Random();
+//      for (int i = 0; i < board.length; i++) {
+//         board[i] = alphabet.charAt(random.nextInt(26)) + "";
+//      }
+      game.setBoard(new String[]{"CAT","X","FISH","XXXX",});
       System.out.println(game.getBoard());
-      System.out.print("LENT is on the board at the following positions: ");
-      System.out.println(game.isOnBoard("LENT"));
-      System.out.print("POPE is not on the board: ");
-      System.out.println(game.isOnBoard("POPE"));
-      System.out.println("All words of length 6 or more: ");
-      System.out.println(game.getAllValidWords(6));
+
+      long start = System.currentTimeMillis();
+      SortedSet<String> words = game.getAllValidWords(7);
+      System.out.println(System.currentTimeMillis()-start + " ms");
+      System.out.println(words);
+      System.out.println(words.size() + " words");
+      System.out.println(game.isOnBoard("CATFISH"));
+
+      System.out.println(game.isValidWord("AA"));
    }
 }
 
